@@ -1,0 +1,69 @@
+<div class="login-wrap">
+    <div class="login-card">
+        <p class="logo">E·<span>Booking</span></p>
+        <h2>Bon retour</h2>
+        <p class="sub">Connectez-vous à votre espace</p>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+            <div class="field">
+                <label for="email">Adresse email</label>
+                <div class="input-wrap">
+                    <mat-icon>mail_outline</mat-icon>
+                    <input id="email" type="email" formControlName="email" placeholder="vous@exemple.fr" />
+                </div>
+                @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+                <span class="field-error">L'email est requis</span>
+                }
+                @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+                <span class="field-error">Email invalide</span>
+                }
+            </div>
+
+            <div class="field">
+                <label for="password">Mot de passe</label>
+                <div class="input-wrap">
+                    <mat-icon>lock_outline</mat-icon>
+                    <input id="password" [type]="hidePassword ? 'password' : 'text'" formControlName="motDePasse"
+                        placeholder="••••••••" />
+                    <button type="button" class="eye-btn" (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </div>
+                @if (form.get('motDePasse')?.hasError('required') && form.get('motDePasse')?.touched) {
+                <span class="field-error">Le mot de passe est requis</span>
+                }
+                @if (form.get('motDePasse')?.hasError('minlength') && form.get('motDePasse')?.touched) {
+                <span class="field-error">6 caractères minimum</span>
+                }
+            </div>
+
+            <div class="forgot">
+                <a routerLink="/forgot-password">Mot de passe oublié ?</a>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="loading">
+                @if (loading) {
+                <mat-spinner diameter="18"></mat-spinner>
+                } @else {
+                Se connecter
+                <mat-icon>arrow_forward</mat-icon>
+                }
+            </button>
+
+        </form>
+
+        <div class="divider"><span>Pas encore de compte ?</span></div>
+
+        <div class="register-links">
+            <a routerLink="/register/client" class="reg-link client">
+                <mat-icon>person_outline</mat-icon>
+                S'inscrire en tant que client
+            </a>
+            <a routerLink="/register/pro" class="reg-link pro">
+                <mat-icon>work_outline</mat-icon>
+                S'inscrire en tant que pro
+            </a>
+        </div>
+    </div>
+</div>

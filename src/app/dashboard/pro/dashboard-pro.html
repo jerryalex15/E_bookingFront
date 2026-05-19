@@ -1,0 +1,156 @@
+<!--  Header  -->
+<div class="page-header">
+    <div>
+        <h1>{{ sectionTitle }}</h1>
+        <p class="page-sub">{{ sectionSub }}</p>
+    </div>
+</div>
+
+<!-- Loading -->
+@if (loading) {
+<div class="loading-state">
+    <mat-spinner diameter="32"></mat-spinner>
+</div>
+}
+
+<!--  Mes RDV  -->
+@if (!loading && activeSection === 'rdv') {
+@if (rdvPro.length === 0) {
+<div class="empty-state">
+    <mat-icon>event_available</mat-icon>
+    <p>Aucun rendez-vous à venir</p>
+</div>
+} @else {
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Client</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (rdv of rdvPro; track rdv.rendezVousId) {
+            <tr>
+                <td>{{ rdv.date | date:'dd/MM/yyyy'}}</td>
+                <td>{{ rdv.heureDebut | utcToLocal:rdv.date }} – {{ rdv.heureFin | utcToLocal:rdv.date}}</td>
+                <td>{{ rdv.user?.nom }}</td>
+                <td>
+                    <span class="status-badge" [ngClass]="statusClass(rdv.statut)">
+                        {{ rdv.statut }}
+                    </span>
+                </td>
+                <td class="actions-cell">
+                    <button class="btn-icon success" (click)="confirmerRdv(rdv.rendezVousId)" title="Confirmer">
+                        <mat-icon>check_circle</mat-icon>
+                    </button>
+                    <button class="btn-icon danger" (click)="annulerRdv(rdv.rendezVousId)" title="Annuler">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+}
+
+<!--  Disponibilités  -->
+@if (!loading && activeSection === 'disponibilites') {
+<div class="two-col">
+    <div class="form-card">
+        <h3>{{ selectedDispoId ? 'Modifier le créneau' : 'Ajouter un créneau' }}</h3>
+        <form [formGroup]="dispoForm" (ngSubmit)="submitDispo()">
+            <div class="field">
+                <label>Début</label>
+                <input type="datetime-local" formControlName="dateHeureDebut" class="text-input" />
+            </div>
+            <div class="field">
+                <label>Fin</label>
+                <input type="datetime-local" formControlName="dateHeureFin" class="text-input" />
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary accent--pro" [disabled]="dispoForm.invalid || loading">
+                    <mat-icon>{{ selectedDispoId ? 'save' : 'add' }}</mat-icon>
+                    {{ selectedDispoId ? 'Enregistrer' : 'Ajouter' }}
+                </button>
+                @if (selectedDispoId) {
+                <button type="button" class="btn-ghost" (click)="cancelEdit()">
+                    <mat-icon>close</mat-icon> Annuler
+                </button>
+                }
+            </div>
+        </form>
+    </div>
+
+    <div class="dispo-list">
+        @if (disponibilites.length === 0) {
+        <div class="empty-state">
+            <mat-icon>schedule</mat-icon>
+            <p>Aucune disponibilité définie</p>
+        </div>
+        } @else {
+        @for (d of disponibilites; track d.disponibiliteId) {
+        <div class="dispo-item" [class.selected]="d.disponibiliteId === selectedDispoId">
+            <div>
+                <p class="dispo-jour">{{ d.jourSemaine }} {{ d.date }}</p>
+                <p class="dispo-heure">{{ toLocalTimeDisplay(d.date, d.heureDebut) }} → {{ toLocalTimeDisplay(d.date,
+                    d.heureFin) }}</p>
+            </div>
+            <div class="dispo-actions">
+                <button class="btn-icon" (click)="editDispo(d)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button class="btn-icon danger" (click)="deleteDispo(d.disponibiliteId)">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+        }
+    </div>
+</div>
+}
+
+<!--  Profil  -->
+@if (!loading && activeSection === 'profil') {
+<div class="form-card" style="max-width: 440px">
+    @if (profilPrestataire) {
+    <div class="profil-header">
+        <div class="avatar large">{{ initials }}</div>
+        <div>
+            <p class="card-title">{{ currentUser?.prenom }} {{ currentUser?.nom }}</p>
+            <p class="card-sub">{{ profilPrestataire.specialite }}</p>
+            <p class="card-sub">{{ profilPrestataire.adresse }}</p>
+            <p class="card-sub">{{ currentServiceName }}</p>
+        </div>
+    </div>
+    }
+    <form [formGroup]="profilForm" (ngSubmit)="updateProfil()">
+        <div class="field">
+            <label>Spécialité</label>
+            <input type="text" formControlName="specialite" class="text-input" placeholder="Ex: Plombier" />
+        </div>
+        <div class="field">
+            <label>Adresse</label>
+            <input type="text" formControlName="adresse" class="text-input" placeholder="Adresse" />
+        </div>
+        <div class="field">
+            <label>Service</label>
+            <select formControlName="serviceId" class="text-input">
+                <option [ngValue]="null" disabled>-- Choisir un service --</option>
+                @for (s of services; track $index) {
+                <option [ngValue]="s.serviceId">{{ s.nomService }}</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn-primary accent--pro">
+            <mat-icon>save</mat-icon> Enregistrer
+        </button>
+    </form>
+</div>
+}

@@ -1,0 +1,189 @@
+<!--  Header  -->
+<div class="page-header">
+    <div>
+        <h1>{{ sectionTitle }}</h1>
+        <p class="page-sub">{{ sectionSub }}</p>
+    </div>
+</div>
+
+<!-- Loading -->
+@if (loading) {
+<div class="loading-state">
+    <mat-spinner diameter="32"></mat-spinner>
+</div>
+}
+
+<!--  Statistiques  -->
+@if (!loading && activeSection === 'stats' && stats) {
+<div class="stats-grid">
+    <div class="stat-card">
+        <p class="stat-label">Total RDV</p>
+        <p class="stat-value">{{ stats.totalRendezVous }}</p>
+    </div>
+    <div class="stat-card confirmed">
+        <p class="stat-label">Confirmés</p>
+        <p class="stat-value">{{ stats.rendezVousConfirmes }}</p>
+    </div>
+    <div class="stat-card pending">
+        <p class="stat-label">En attente</p>
+        <p class="stat-value">{{ stats.rendezVousEnAttente }}</p>
+    </div>
+    <div class="stat-card cancelled">
+        <p class="stat-label">Annulés</p>
+        <p class="stat-value">{{ stats.rendezVousAnnules }}</p>
+    </div>
+    <div class="stat-card">
+        <p class="stat-label">Utilisateurs</p>
+        <p class="stat-value">{{ stats.totalUtilisateurs }}</p>
+    </div>
+    <div class="stat-card">
+        <p class="stat-label">Prestataires</p>
+        <p class="stat-value">{{ stats.totalPrestataires }}</p>
+    </div>
+    <div class="stat-card">
+        <p class="stat-label">Services</p>
+        <p class="stat-value">{{ stats.totalServices }}</p>
+    </div>
+    <div class="stat-card accent">
+        <p class="stat-label">Taux d'occupation</p>
+        <p class="stat-value">{{ stats.tauxOccupation | number:'1.0-1' }}%</p>
+    </div>
+</div>
+}
+
+<!--  Utilisateurs  -->
+@if (!loading && activeSection === 'users') {
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Rôle(s)</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (u of users; track u.userId) {
+            <tr>
+                <td>{{ u.prenom }} {{ u.nom }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.telephone }}</td>
+                <td>{{ u.role.roleNom }}</td>
+                <td>
+                    <span class="status-badge" [ngClass]="u.activeStatut ? 'confirmed' : 'cancelled'">
+                        {{ u.activeStatut ? 'Actif' : 'Bloqué' }}
+                    </span>
+                </td>
+                <td class="actions-cell">
+                    @if (u.activeStatut) {
+                    <button class="btn-icon warning" (click)="bloquerUser(u.userId)" title="Bloquer">
+                        <mat-icon>block</mat-icon>
+                    </button>
+                    } @else {
+                    <button class="btn-icon success" (click)="activerUser(u.userId)" title="Activer">
+                        <mat-icon>check_circle</mat-icon>
+                    </button>
+                    }
+                    <button class="btn-icon danger" (click)="deleteUser(u.userId)" title="Supprimer">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+<!--  Prestataires  -->
+@if (!loading && activeSection === 'prestataires') {
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Spécialité</th>
+                <th>Adresse</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (p of prestataires; track p.prestataireId) {
+            <tr>
+                <td>{{ p.user?.nom }}</td>
+                <td>{{ p.user?.email }}</td>
+                <td>{{ p.specialite }}</td>
+                <td>{{ p.adresse }}</td>
+                <td>
+                    <button class="btn-icon danger" (click)="deletePrestataire(p.prestataireId)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+<!--  Services  -->
+@if (!loading && activeSection === 'services') {
+<div class="form-card" style="max-width:420px; margin-bottom:1.5rem">
+    <h3>{{ selectedService ? 'Modifier le service' : 'Nouveau service' }}</h3>
+    <form [formGroup]="serviceForm" (ngSubmit)="selectedService ? updateService() : createService()">
+        <div class="field">
+            <label>Nom du service</label>
+            <input type="text" formControlName="nomService" class="text-input" placeholder="Ex: Plomberie" />
+        </div>
+        <div class="field">
+            <label>Description</label>
+            <input type="text" formControlName="description" class="text-input" placeholder="Description courte" />
+        </div>
+        <div style="display:flex; gap:.75rem">
+            <button type="submit" class="btn-primary accent--admin" [disabled]="serviceForm.invalid">
+                <mat-icon>{{ selectedService ? 'save' : 'add' }}</mat-icon>
+                {{ selectedService ? 'Enregistrer' : 'Créer' }}
+            </button>
+            @if (selectedService) {
+            <button type="button" class="btn-ghost accent--admin" (click)="cancelEdit()">
+                <mat-icon>close</mat-icon> Annuler
+            </button>
+            }
+        </div>
+    </form>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prestataires</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (s of services; track s.serviceId) {
+            <tr>
+                <td>{{ s.nomService }}</td>
+                <td>{{ s.description }}</td>
+                <td>{{ s.prestataires?.length }}</td>
+                <td class="dispo-actions">
+                    <button class="btn-icon" (click)="selectForEdit(s)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="btn-icon danger" (click)="deleteService(s.serviceId)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

@@ -1,0 +1,70 @@
+<div class="dashboard-wrap" [ngClass]="roleClass">
+    <aside class="sidebar">
+        <p class="logo">E-Booking</p>
+
+        <div class="user-info">
+            <div class="avatar">{{ initials }}</div>
+            <div>
+                <p class="user-name">{{ user?.prenom }} {{ user?.nom }}</p>
+                <span class="role-badge" [ngClass]="roleClass">{{ roleLabel }}</span>
+            </div>
+        </div>
+
+        <nav class="nav">
+            @if (isClient) {
+            <a class="nav-item" [routerLink]="['/dashboard/client']" [queryParams]="{section: 'rdv'}"
+                routerLinkActive="active">
+                <mat-icon>event</mat-icon> Mes rendez-vous
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/client']" [queryParams]="{section: 'prestataires'}"
+                routerLinkActive="active">
+                <mat-icon>people_outline</mat-icon> Prestataires
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/client']" [queryParams]="{section: 'services'}"
+                routerLinkActive="active">
+                <mat-icon>miscellaneous_services</mat-icon> Services
+            </a>
+            }
+            @if (isPro) {
+            <a class="nav-item" [routerLink]="['/dashboard/pro']" [queryParams]="{section: 'rdv'}"
+                routerLinkActive="active">
+                <mat-icon>event_available</mat-icon> Mes rendez-vous
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/pro']" [queryParams]="{section: 'disponibilites'}"
+                routerLinkActive="active">
+                <mat-icon>schedule</mat-icon> Disponibilités
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/pro']" [queryParams]="{section: 'profil'}"
+                routerLinkActive="active">
+                <mat-icon>manage_accounts</mat-icon> Mon profil
+            </a>
+            }
+            @if (isAdmin) {
+            <a class="nav-item" [routerLink]="['/dashboard/admin']" [queryParams]="{section: 'stats'}"
+                routerLinkActive="active">
+                <mat-icon>bar_chart</mat-icon> Statistiques
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/admin']" [queryParams]="{section: 'users'}"
+                routerLinkActive="active">
+                <mat-icon>group</mat-icon> Utilisateurs
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/admin']" [queryParams]="{section: 'prestataires'}"
+                routerLinkActive="active">
+                <mat-icon>badge</mat-icon> Prestataires
+            </a>
+            <a class="nav-item" [routerLink]="['/dashboard/admin']" [queryParams]="{section: 'services'}"
+                routerLinkActive="active">
+                <mat-icon>category</mat-icon> Services
+            </a>
+            }
+        </nav>
+
+        <button class="logout-btn" (click)="logout()">
+            <mat-icon>logout</mat-icon> Déconnexion
+        </button>
+    </aside>
+
+    <main class="main">
+        <router-outlet />
+    </main>
+</div>
