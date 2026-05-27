@@ -5,7 +5,6 @@
         <p class="sub">Connectez-vous à votre espace</p>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-
             <div class="field">
                 <label for="email">Adresse email</label>
                 <div class="input-wrap">
@@ -42,7 +41,7 @@
                 <a routerLink="/forgot-password">Mot de passe oublié ?</a>
             </div>
 
-            <button type="submit" class="btn-submit" [disabled]="loading">
+            <button id="btn-submit" type="submit" class="btn-submit" [disabled]="form.invalid || loading">
                 @if (loading) {
                 <mat-spinner diameter="18"></mat-spinner>
                 } @else {

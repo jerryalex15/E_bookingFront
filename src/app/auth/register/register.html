@@ -55,21 +55,6 @@
             </div>
 
             <div class="field">
-                <label for="telephone">Téléphone</label>
-                <div class="input-wrap">
-                    <mat-icon>phone</mat-icon>
-                    <input id="telephone" type="tel" formControlName="telephone" placeholder="+33 6 12 34 56 78"
-                        [ngClass]="role" />
-                </div>
-                @if (form.get('telephone')?.hasError('required') && form.get('telephone')?.touched) {
-                <span class="field-error">Téléphone requis</span>
-                }
-                @if (form.get('telephone')?.hasError('pattern') && form.get('telephone')?.touched) {
-                <span class="field-error">Numéro invalide</span>
-                }
-            </div>
-
-            <div class="field">
                 <label for="motDePasse">Mot de passe</label>
                 <div class="input-wrap">
                     <mat-icon>lock_outline</mat-icon>
@@ -102,7 +87,7 @@
                 }
             </div>
 
-            <button type="submit" class="btn-submit" [ngClass]="role" [disabled]="loading">
+            <button id="btn-submit" type="submit" class="btn-submit" [ngClass]="role" [disabled]=" form.invalid || loading">
                 @if (loading) {
                 <mat-spinner diameter="18"></mat-spinner>
                 } @else {

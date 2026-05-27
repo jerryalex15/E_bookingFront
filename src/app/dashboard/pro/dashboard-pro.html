@@ -44,12 +44,16 @@
                     </span>
                 </td>
                 <td class="actions-cell">
+                    @if (rdv.statut == "EN_ATTENTE") {
                     <button class="btn-icon success" (click)="confirmerRdv(rdv.rendezVousId)" title="Confirmer">
                         <mat-icon>check_circle</mat-icon>
                     </button>
+                    }
+                    @if (rdv.statut == "CONFIRME") {
                     <button class="btn-icon danger" (click)="annulerRdv(rdv.rendezVousId)" title="Annuler">
                         <mat-icon>cancel</mat-icon>
                     </button>
+                    }
                 </td>
             </tr>
             }

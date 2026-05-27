@@ -61,7 +61,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
         prenom:       ['', [Validators.required, Validators.minLength(2)]],
         nom:          ['', [Validators.required, Validators.minLength(2)]],
         email:        ['', [Validators.required, Validators.email]],
-        telephone:    ['', [Validators.required, Validators.pattern(/^[0-9+\s\-]{8,15}$/)]],
         motDePasse:   ['', [Validators.required, Validators.minLength(8)]],
         confirmation: ['', Validators.required],
       },
@@ -105,14 +104,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.snackBar.open(
           `Compte ${this.roleLabel} créé avec succès ! Connectez-vous.`,
           'OK',
-          { duration: 5000, panelClass: 'snack-success' }
+          { duration: 4000000, panelClass: 'snack-success' }
         );
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading = false;
-        const msg = err.error?.message || 'Une erreur est survenue. Réessayez.';
-        this.snackBar.open(msg, 'Fermer', { duration: 5000, panelClass: 'snack-error' });
+        const msg = err.error?.message || 'Une erreur est survenue. Réessayez.'; // regarder le message d'erreur venant du back pour le test (errorResponse)
+        this.snackBar.open(msg, 'Fermer', { duration: 400000, panelClass: 'snack-error' });
       },
     });
   }

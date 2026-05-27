@@ -5,7 +5,7 @@
         <p class="page-sub">{{ sectionSub }}</p>
     </div>
     @if (activeSection === 'rdv') {
-    <button class="btn-primary accent--client" (click)="setSection('nouveau-rdv')">
+    <button id="new-rdv" class="btn-primary accent--client" (click)="setSection('nouveau-rdv')">
         <mat-icon>add</mat-icon> Nouveau RDV
     </button>
     }
@@ -73,13 +73,13 @@
                 <option value="" disabled>Choisir un prestataire</option>
 
                 @for (p of prestataires; track p.prestataireId) {
-                <option [value]="p.prestataireId">{{ p.user?.nom }} — {{ p.specialite }}</option>
+                <option [id]="p.prestataireId" [value]="p.prestataireId">{{ p.user?.nom }} — {{ p.specialite }}</option>
                 }
             </select>
         </div>
         <div class="field">
             <label>Date</label>
-            <input type="date" class="text-input" [min]="today" [disabled]="!disponibilites.length"
+            <input id="date" type="date" class="text-input" [min]="today" [disabled]="!disponibilites.length"
                 (change)="onDateChange($any($event.target).value)" />
         </div>
         @if (creneaux.length > 0) {

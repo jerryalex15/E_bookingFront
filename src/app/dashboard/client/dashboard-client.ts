@@ -162,7 +162,7 @@ export class DashboardClientComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.rdvForm.reset();
-        this.snackBar.open('Rendez-vous confirmé !', 'OK', { duration: 4000 });
+        this.snackBar.open('Rendez-vous confirmé !', 'OK', { duration: 4000, panelClass: "snack-rdv-success" });
         this.setSection('rdv');
       },
       error: (err) => {
