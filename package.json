@@ -6,8 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI"
+    "test": "ng test --karma-config karma.dev.conf.js",
+    "test:ci": "ng test --karma-config karma.conf.js --watch=false"
   },
   "prettier": {
     "printWidth": 100,
