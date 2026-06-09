@@ -6,7 +6,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-# Étape 2 : serve avec Nginx
+# Étape 2 : serve avec Nginx / il faut specifier la version alpine
 FROM nginx:alpine
 COPY --from=builder /app/dist/ebooking_front/browser /usr/share/nginx/html
 EXPOSE 80
