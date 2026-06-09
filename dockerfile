@@ -7,6 +7,6 @@ COPY . .
 RUN npm run build
 
 # Étape 2 : serve avec Nginx / il faut specifier la version alpine
-FROM nginx:alpine
+FROM nginx:1.31.1-alpine
 COPY --from=builder /app/dist/ebooking_front/browser /usr/share/nginx/html
 EXPOSE 80
