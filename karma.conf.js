@@ -1,12 +1,12 @@
 module.exports = function (config) {
     config.set({
         basePath: '',
-        frameworks: ['jasmine', '@angular/build/karma'],
+        frameworks: ['jasmine', '@angular/build/karma-plugin'],
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
             require('karma-junit-reporter'),        // kjhtml supprimé : inutile en CI
-            require('@angular/build/karma'),
+            require('@angular/build/karma-plugin'),
         ],
         reporters: ['progress', 'junit'],         // kjhtml supprimé ici aussi
         junitReporter: {
